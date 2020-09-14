@@ -86,7 +86,7 @@ def main():
     print("Something went wrong...")
     sys.exit(1)
 
-  print('The complexity of the problem is ' + complexity)
+  print('Round complexity of the problem is ' + complexity)
   sys.exit(0)
       
 if __name__ == "__main__":
