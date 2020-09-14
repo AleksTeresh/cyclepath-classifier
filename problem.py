@@ -2,7 +2,6 @@ from functools import reduce
 from typing import NamedTuple, List
 
 class Problem(NamedTuple):
-  labels: List[str]
   nodeConstr: List[str]
   edgeConstr: List[str]
   startConstr: List[str]
