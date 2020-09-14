@@ -54,6 +54,9 @@ def main():
     usage()
     sys.exit(2)
 
+  nodeConstr = {}
+  edgeConst = {}
+
   for opt, arg in opts:
     if opt in ("-h", "--help"):
       usage()
