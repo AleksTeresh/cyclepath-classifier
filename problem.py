@@ -1,11 +1,11 @@
 from functools import reduce
-from typing import NamedTuple, List
+from typing import NamedTuple, Set
 
 class Problem(NamedTuple):
-  nodeConstr: List[str]
-  edgeConstr: List[str]
-  startConstr: List[str]
-  endConstr: List[str]
+  nodeConstr: Set[str]
+  edgeConstr: Set[str]
+  startConstr: Set[str]
+  endConstr: Set[str]
 
 def isSymmetric(problem):
   symmetricEdges = reduce(lambda acc, x: acc and (x[::-1] in problem.edgeConstr), problem.edgeConstr, True)
