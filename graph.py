@@ -4,6 +4,8 @@ from functools import reduce
 def listGcd(arr):
   return reduce(gcd, arr)
 
+# The code in the function below is adapted based on
+# https://www.geeksforgeeks.org/count-possible-paths-source-destination-exactly-k-edges/
 def countWalks(graph, src, dst, maxWalkLength):
   # Table to be filled up using DP. 
   # The value count[i][j][e] will 
