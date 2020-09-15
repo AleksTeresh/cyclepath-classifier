@@ -2,6 +2,7 @@
 
 import sys, getopt
 from complexity import complexities
+from instances import instanceCounts, HARD
 from problem import isSymmetric, toGraph, Problem
 from graph import hasRepeatable, hasFlexible, hasLoop, hasMirrorFlexible, hasMirrorFlexibleLoop
 
@@ -41,7 +42,21 @@ def classify(problem):
     print("No problem type matches problem.")
     raise Exception
 
-  return complexities["cycles"]["directed"][problemType]
+  complexity = complexities["cycles"]["directed"][problemType]
+  solvableInstanceCount = instanceCounts["cycles"][problemType]["solvable"]
+  unsolvableInstanceCount = instanceCounts["cycles"][problemType]["unsolvable"]
+
+  print('Round complexity of the problem is %s' % complexity)
+  print(
+    'Deciding the number of solvable instances is NP-complete' if
+    solvableInstanceCount == "HARD" else
+    'There are %s solvable instances' % solvableInstanceCount
+  )
+  print(
+    'Deciding the number of unsolvable instances is NP-complete' if
+    solvableInstanceCount == "HARD" else
+    'There are %s unsolvable instances' % unsolvableInstanceCount
+  )
 
 def usage():
   print('classifier.py -n {<node constraint 1>, <node constraint 2>, ...} -e {<edge constraint 1>, ...}')
@@ -84,12 +99,11 @@ def main():
   problem = Problem(nodeConstr, edgeConstr, {}, {})
   
   try:
-    complexity = classify(problem)
+    classify(problem)
   except:
     print("Something went wrong...")
     sys.exit(1)
 
-  print('Round complexity of the problem is ' + complexity)
   sys.exit(0)
       
 if __name__ == "__main__":
