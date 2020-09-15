@@ -1,6 +1,6 @@
 # Cyclepath classifier
 
-A command-line tool for automatically calculating round complexity of LCL problems in cycles and paths based on their description in the node-edge-checkable formalism.
+A command-line tool for automatically calculating round complexity of LCL problems in cycles and paths based on their description in the node-edge-checkable formalism. It also reports the number of solvable/unsolvable instances of a problem when classifying it (see examples below).
 
 The tool is based on the techniques described in [this paper](https://arxiv.org/abs/2002.07659).
 
@@ -22,24 +22,32 @@ The allowed parameters are `-n` or `--node-constr` and `-e` or `--edge-constr`.
 $ ./classifier.py -n "{ 11, 22, 33 }" -e "{ 12, 21, 13, 31, 23, 32 }"
 
 Round complexity of the problem is Θ(log* n)
+There are infinitely many solvable instances
+There are finitely many unsolvable instances
 ```
 
 ```
 $ ./classifier.py -n "{ 00, 1M, M1 }" -e "{ 01, 10, 11, MM }"
 
 Round complexity of the problem is Θ(log* n)
+There are infinitely many solvable instances
+There are finitely many unsolvable instances
 ```
 
 ```
 $ ./classifier.py -n "{ HT, TH }" -e "{ HT, TH }"
 
 Round complexity of the problem is O(1)
+There are infinitely many solvable instances
+There are 0 unsolvable instances
 ```
 
 ```
-./classifier.py -n "{ 12, 21 }" -e "{ 11, 22 }"
+$ ./classifier.py -n "{ 12, 21 }" -e "{ 11, 22 }"
 
 Round complexity of the problem is Θ(n)
+There are infinitely many solvable instances
+There are infinitely many unsolvable instances
 ```
 
 ## Tests
