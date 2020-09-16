@@ -1,5 +1,6 @@
 from functools import reduce
 from typing import NamedTuple, Set
+from graph import prune
 
 class Problem(NamedTuple):
   nodeConstr: Set[str]
@@ -23,4 +24,7 @@ def toGraph(problem):
         if key1[1] == b and key2[0] == c:
           graph[key1].append(key2)
 
-  return graph
+  startingStates = set(filter(lambda x: x[0] in problem.startConstr, problem.edgeConstr))
+  acceptingStates = set(filter(lambda x: x[1] in problem.endConstr, problem.edgeConstr))
+
+  return prune(graph, startingStates, acceptingStates) if startingStates or acceptingStates else graph

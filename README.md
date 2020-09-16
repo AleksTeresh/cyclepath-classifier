@@ -10,11 +10,14 @@ The tool is based on the techniques described in [this paper](https://arxiv.org/
 
 ## Getting started
 
-_NOTE: For now the tool assumes that the problem is always specified for a directed cycle. Support for undirected cycles and directed/undirected paths will be added later._
+_NOTE: For now the tool assumes that the problem is always specified for a directed cycle/path. Support for undirected cycles and paths will be added later._
 
 Run the tool specifying node and edge constraints of a problem in the node-edge-checkable formalism.
 
-The allowed parameters are `-n` or `--node-constr` and `-e` or `--edge-constr`.
+The required parameters are `-n` or `--node-constr` and `-e` or `--edge-constr`.
+There are also optional parameters specifying start and end constraints: `--start-constr` and `--end-constr`
+
+The tool will assume that the problem is defined for a **path** if either `--start-constr` or `--end-constr` is specified. Otherwise, **cycle** setting is assumed.
 
 ### Examples
 
@@ -47,6 +50,14 @@ $ ./classifier.py -n "{ 12, 21 }" -e "{ 11, 22 }"
 
 Round complexity of the problem is Θ(n)
 There are infinitely many solvable instances
+There are infinitely many unsolvable instances
+```
+
+```
+$ ./classifier.py -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
+
+Round complexity of the problem is O(1)
+There are finitely many solvable instances
 There are infinitely many unsolvable instances
 ```
 

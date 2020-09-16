@@ -9,13 +9,20 @@ class TestProblem(unittest.TestCase):
   edge3Coloring = Problem(nodeConstr=["12", "21", "13", "31", "23", "32"], edgeConstr=["11", "22", "33"], startConstr=[], endConstr=[])
   consistentOrientation = Problem(nodeConstr=["HT", "TH"], edgeConstr=["HT", "TH"], startConstr=[], endConstr=[])
   maximalMatching = Problem(nodeConstr=["00", "1M", "M1"], edgeConstr=["01", "10", "11", "MM"], startConstr=[], endConstr=[])
+  
   assymSample = Problem(nodeConstr=["00", "1M"], edgeConstr=["01", "10", "11", "MM"], startConstr=[], endConstr=[])
+  prunableSample = Problem(nodeConstr=["00", "1M"], edgeConstr=["01", "10", "11", "MM"], startConstr=["1"], endConstr=["1"])
 
   def testToGraph(self):
     self.assertDictEqual(toGraph(self.vertex3Coloring), { "12": ["21", "23"], "13": ["31", "32"], "21": ["12", "13"], "23": ["31", "32"], "31": ["12", "13"], "32": ["21", "23"] })
     self.assertDictEqual(toGraph(self.edge3Coloring), { "11": ["22", "33"], "22": ["11", "33"], "33": ["11", "22"] })
     self.assertDictEqual(toGraph(self.consistentOrientation), { "HT": ["HT"], "TH": ["TH"] })
     self.assertDictEqual(toGraph(self.maximalMatching), { "11": ["MM"], "10": ["01"], "01": ["MM"], "MM": ["10", "11"] })
+    
+    self.assertDictEqual(toGraph(self.assymSample), { "11": ["MM"], "10": ["01"], "01": ["MM"], "MM": [] })
+
+  def testGraphPruning(self):
+    self.assertDictEqual(toGraph(self.prunableSample), { "11": [], "10": ["01"], "01": []})
 
   def testIsSymmetric(self):
     self.assertTrue(isSymmetric(self.vertex3Coloring))

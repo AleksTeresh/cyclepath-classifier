@@ -89,3 +89,31 @@ def isMirrorFlexibleLoop(graph, node):
 
 def hasMirrorFlexibleLoop(graph):
   return hasProperty(graph, isMirrorFlexibleLoop)
+
+def canReachTo(graph, startNode, nodesToReach):
+  return startNode in nodesToReach or reduce(lambda acc, x: acc or isReachable(graph, startNode, x), nodesToReach, False)
+
+def canBeReachedFrom(graph, startNodes, nodeToReach):
+  return nodeToReach in startNodes or reduce(lambda acc, x: acc or isReachable(graph, x, nodeToReach), startNodes, False)
+
+def prune(graph, startNodes, acceptingNodes):
+  '''
+  Keep only nodes that are reachable from one of the starting states/nodes
+  and can reach one of the accepting states/nodes.
+  Remove the rest of the nodes from the graph
+  '''
+  newGraph = {}
+  pruned = set()
+  for node in graph:
+    # the node is reachable from one of the starting states
+    # and can reach one of the accepting nodes
+    if canBeReachedFrom(graph, startNodes, node) and canReachTo(graph, node, acceptingNodes):
+      newGraph[node] = graph[node]
+    else:
+      pruned.add(node)
+
+  for v in newGraph:
+    newGraph[v] = list(filter(lambda x: not x in pruned, newGraph[v]))
+  
+  return newGraph
+

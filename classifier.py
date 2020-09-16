@@ -39,12 +39,13 @@ def classify(problem):
   elif not s and not r and not f and not l and not mf and not mfl:
     problemType = "K"
   else:
-    print("No problem type matches problem.")
+    print("No problem type matches the specified problem.")
     raise Exception
 
-  complexity = complexities["cycles"]["directed"][problemType]
-  solvableInstanceCount = instanceCounts["cycles"][problemType]["solvable"]
-  unsolvableInstanceCount = instanceCounts["cycles"][problemType]["unsolvable"]
+  setting = "paths" if problem.startConstr or problem.endConstr else "cycles"
+  complexity = complexities[setting]["directed"][problemType]
+  solvableInstanceCount = instanceCounts[setting][problemType]["solvable"]
+  unsolvableInstanceCount = instanceCounts[setting][problemType]["unsolvable"]
 
   print('Round complexity of the problem is %s' % complexity)
   print(
@@ -61,33 +62,43 @@ def classify(problem):
 def usage():
   print('classifier.py -n {<node constraint 1>, <node constraint 2>, ...} -e {<edge constraint 1>, ...}')
 
+def parseConstraints(constrArg):
+  return set([x.strip() for x in constrArg.strip()[1:-1].split(',') if x.strip() != ''])
+
 def main():
   try:
-    opts, args = getopt.getopt(sys.argv[1:],"hn:e:",["help", "node-constr=","edge-constr="])
+    opts, args = getopt.getopt(
+      sys.argv[1:],
+      "hn:e:",
+      [
+        "help",
+        "node-constr=",
+        "edge-constr=",
+        "start-constr=",
+        "end-constr="
+      ])
   except getopt.GetoptError as err:
     print(err)
     usage()
     sys.exit(2)
 
   nodeConstr = {}
-  edgeConst = {}
+  edgeConstr = {}
+  startConstr={}
+  endConstr={}
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
       usage()
       sys.exit()
     elif opt in ("-n", "--node-constr"):
-      try :
-        nodeConstr = set(map(lambda x: x.strip(), arg.strip()[1:-1].split(',')))
-      except ValueError:
-        print("Specify constraints in the following format: {<node constraint 1>, <node constraint 2>, ...}")
-        sys.exit(1)
+      nodeConstr = parseConstraints(arg)
     elif opt in ("-e", "--edge-constr"):
-      try :
-        edgeConstr = set(map(lambda x: x.strip(), arg.strip()[1:-1].split(',')))
-      except ValueError:
-        print("Specify constraints in the following format: {<edge constraint 1>, <edge constraint 2>, ...}")
-        sys.exit(1)
+      edgeConstr = parseConstraints(arg)
+    elif opt == "--start-constr":
+      startConstr = parseConstraints(arg)
+    elif opt == "--end-constr":
+      endConstr = parseConstraints(arg)
     else:
       print("Unhandled option: " + opt)
       sys.exit(1)
@@ -96,7 +107,7 @@ def main():
     print("Both node and edge constraints need to be non-empty")
     sys.exit(1)
 
-  problem = Problem(nodeConstr, edgeConstr, {}, {})
+  problem = Problem(nodeConstr, edgeConstr, startConstr, endConstr)
   
   try:
     classify(problem)
