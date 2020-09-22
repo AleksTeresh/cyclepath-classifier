@@ -1,3 +1,5 @@
+from problem import Type
+
 CONST = "O(1)"
 GLOBAL = "Θ(n)"
 ITERATED_LOG = "Θ(log* n)"
@@ -5,7 +7,7 @@ UNSOLVABLE = " - "
 
 complexities = {
   "cycles": {
-    "directed": {
+    Type.DIRECTED: {
       "A": CONST,
       "B": CONST,
       "C": CONST,
@@ -18,7 +20,7 @@ complexities = {
       "J": UNSOLVABLE,
       "K": UNSOLVABLE,
     },
-    "undirected": {
+    Type.UNDIRECTED: {
       "A": CONST,
       "B": ITERATED_LOG,
       "C": GLOBAL,
@@ -33,7 +35,7 @@ complexities = {
     }
   },
   "paths": {
-    "directed": {
+    Type.DIRECTED: {
       "A": CONST,
       "B": CONST,
       "C": CONST,
@@ -46,7 +48,7 @@ complexities = {
       "J": UNSOLVABLE,
       "K": CONST,
     },
-    "undirected": {
+    Type.UNDIRECTED: {
       "A": CONST,
       "B": ITERATED_LOG,
       "C": GLOBAL,

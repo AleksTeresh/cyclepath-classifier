@@ -5,13 +5,49 @@ from graph import *
 from problem import *
 
 class TestProblem(unittest.TestCase):
-  vertex3Coloring = Problem(nodeConstr=["11", "22", "33"], edgeConstr=["12", "21", "13", "31", "23", "32"], startConstr=[], endConstr=[])
-  edge3Coloring = Problem(nodeConstr=["12", "21", "13", "31", "23", "32"], edgeConstr=["11", "22", "33"], startConstr=[], endConstr=[])
-  consistentOrientation = Problem(nodeConstr=["HT", "TH"], edgeConstr=["HT", "TH"], startConstr=[], endConstr=[])
-  maximalMatching = Problem(nodeConstr=["00", "1M", "M1"], edgeConstr=["01", "10", "11", "MM"], startConstr=[], endConstr=[])
+  vertex3Coloring = Problem(
+    nodeConstr=["11", "22", "33"],
+    edgeConstr=["12", "21", "13", "31", "23", "32"],
+    startConstr=[],
+    endConstr=[],
+    type=Type.UNDIRECTED
+  )
+  edge3Coloring = Problem(
+    nodeConstr=["12", "21", "13", "31", "23", "32"],
+    edgeConstr=["11", "22", "33"],
+    startConstr=[],
+    endConstr=[],
+    type=Type.UNDIRECTED
+  )
+  consistentOrientation = Problem(
+    nodeConstr=["HT", "TH"],
+    edgeConstr=["HT", "TH"],
+    startConstr=[],
+    endConstr=[],
+    type=Type.UNDIRECTED
+  )
+  maximalMatching = Problem(
+    nodeConstr=["00", "1M", "M1"],
+    edgeConstr=["01", "10", "11", "MM"],
+    startConstr=[],
+    endConstr=[],
+    type=Type.UNDIRECTED
+  )
   
-  assymSample = Problem(nodeConstr=["00", "1M"], edgeConstr=["01", "10", "11", "MM"], startConstr=[], endConstr=[])
-  prunableSample = Problem(nodeConstr=["00", "1M"], edgeConstr=["01", "10", "11", "MM"], startConstr=["1"], endConstr=["1"])
+  assymSample = Problem(
+    nodeConstr=["00", "1M"],
+    edgeConstr=["01", "10", "11", "MM"],
+    startConstr=[],
+    endConstr=[],
+    type=Type.UNDIRECTED
+  )
+  prunableSample = Problem(
+    nodeConstr=["00", "1M"],
+    edgeConstr=["01", "10", "11", "MM"],
+    startConstr=["1"],
+    endConstr=["1"],
+    type=Type.UNDIRECTED
+  )
 
   def testToGraph(self):
     self.assertDictEqual(toGraph(self.vertex3Coloring), { "12": ["21", "23"], "13": ["31", "32"], "21": ["12", "13"], "23": ["31", "32"], "31": ["12", "13"], "32": ["21", "23"] })

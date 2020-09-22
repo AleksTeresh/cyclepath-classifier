@@ -10,8 +10,6 @@ The tool is based on the techniques described in [this paper](https://arxiv.org/
 
 ## Getting started
 
-_NOTE: For now the tool assumes that the problem is always specified for a directed cycle/path. Support for undirected cycles and paths will be added later._
-
 Run the tool specifying node and edge constraints of a problem in the node-edge-checkable formalism.
 
 The required parameters are `-n` or `--node-constr` and `-e` or `--edge-constr`.
@@ -22,7 +20,7 @@ The tool will assume that the problem is defined for a **path** if either `--sta
 ### Examples
 
 ```
-$ ./classifier.py -n "{ 11, 22, 33 }" -e "{ 12, 21, 13, 31, 23, 32 }"
+$ ./classifier.py -t undir -n "{ 11, 22, 33 }" -e "{ 12, 21, 13, 31, 23, 32 }"
 
 Round complexity of the problem is Θ(log* n)
 There are infinitely many solvable instances
@@ -30,23 +28,7 @@ There are finitely many unsolvable instances
 ```
 
 ```
-$ ./classifier.py -n "{ 00, 1M, M1 }" -e "{ 01, 10, 11, MM }"
-
-Round complexity of the problem is Θ(log* n)
-There are infinitely many solvable instances
-There are finitely many unsolvable instances
-```
-
-```
-$ ./classifier.py -n "{ HT, TH }" -e "{ HT, TH }"
-
-Round complexity of the problem is O(1)
-There are infinitely many solvable instances
-There are 0 unsolvable instances
-```
-
-```
-$ ./classifier.py -n "{ 12, 21 }" -e "{ 11, 22 }"
+$ ./classifier.py -t undir -n "{ 12, 21 }" -e "{ 11, 22 }"
 
 Round complexity of the problem is Θ(n)
 There are infinitely many solvable instances
@@ -54,11 +36,17 @@ There are infinitely many unsolvable instances
 ```
 
 ```
-$ ./classifier.py -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
+$ ./classifier.py -t undir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
 
 Round complexity of the problem is O(1)
 There are finitely many solvable instances
 There are infinitely many unsolvable instances
+```
+
+```
+$ ./classifier.py -t dir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
+
+A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.
 ```
 
 ## Tests

@@ -1,12 +1,19 @@
 from functools import reduce
 from typing import NamedTuple, Set
 from graph import prune
+from enum import Enum
+
+class Type(Enum):
+  DIRECTED = 1
+  UNDIRECTED = 2
+  TREE = 3
 
 class Problem(NamedTuple):
   nodeConstr: Set[str]
   edgeConstr: Set[str]
   startConstr: Set[str]
   endConstr: Set[str]
+  type: Type
 
 def isSymmetric(problem):
   symmetricEdges = reduce(lambda acc, x: acc and (x[::-1] in problem.edgeConstr), problem.edgeConstr, True)
