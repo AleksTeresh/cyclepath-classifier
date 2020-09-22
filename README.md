@@ -49,6 +49,14 @@ $ ./classifier.py -t dir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1
 A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.
 ```
 
+```
+$ ./classifier.py -t tree -e "{ 11, 22 }"
+
+Round complexity of the problem is O(1)
+There are infinitely many solvable instances
+There are finitely many unsolvable instances
+```
+
 ## Tests
 
 Run tests with `./test.py`. See the file for details.
