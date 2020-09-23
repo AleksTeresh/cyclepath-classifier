@@ -73,6 +73,14 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(len(lines), 2)
     self.assertEqual(lines[0], "A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
     self.assertEqual(lines[1], "")
+    
+  def testAsummetricTreeproblem(self):
+    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 12, 21, 13 }"], capture_output=True)
+    lines = str(result1.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 2)
+    self.assertEqual(lines[0], "A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
+    self.assertEqual(lines[1], '')
 
   def testGracefulErrorForTree(self):
     result = subprocess.run(['./classifier.py', '-t', 'tree', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
@@ -82,15 +90,57 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[0], "Do not specify any constraints other than edge-constr when --type option is 'tree'")
     self.assertEqual(lines[1], '')
 
-  def testTrivialTree(self):
-    result = subprocess.run(['./classifier.py', '-t', 'tree', '-e', '{ 11, 22 }'], capture_output=True)
-    lines = str(result.stdout.decode('utf-8')).split('\n')
+  def testTreeAndDirectedPathEq1(self):
+    result1 = subprocess.run(['./classifier.py', '-t', 'tree', '-e', '{ 11, 22 }'], capture_output=True)
+    lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
     self.assertEqual(lines[0], "Round complexity of the problem is O(1)")
     self.assertEqual(lines[1], "There are infinitely many solvable instances")
     self.assertEqual(lines[2], "There are finitely many unsolvable instances")
     self.assertEqual(lines[3], '')
+
+    result2 = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{11, 22}', '-e', '{ 11, 22 }', '--start-constr', '{ 1, 2 }',  '--end-constr', '{ 1, 2 }'], capture_output=True)
+    self.assertEqual(result1.stdout, result2.stdout)
+
+  def testTreeAndDirectedPathEq2(self):
+    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
+    lines = str(result1.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is O(1)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are finitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 00, 11, MM }", "-e", "{ 01, 10, 11, MM }", '--start-constr', '{ 0, 1, M }',  '--end-constr', '{ 0, 1, M }'], capture_output=True)
+    self.assertEqual(result1.stdout, result2.stdout)
+
+  def testTreeAndDirectedPathEq3(self):
+    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
+    lines = str(result1.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(log* n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are finitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 22, 11, 33 }", "-e", "{ 12, 21, 13, 31, 23, 32 }", '--start-constr', '{ 2, 1, 3 }',  '--end-constr', '{ 2, 1, 3 }'], capture_output=True)
+    self.assertEqual(result1.stdout, result2.stdout)
+
+  def testTreeAndDirectedPathEq4(self):
+    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 14, 41, 12, 21, 13, 31 }"], capture_output=True)
+    lines = str(result1.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "Deciding the number of unsolvable instances is NP-complete")
+    self.assertEqual(lines[3], '')
+
+    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 22, 11, 33, 44 }", "-e", "{ 14, 41, 12, 21, 13, 31 }", '--start-constr', '{ 2, 1, 3, 4 }',  '--end-constr', '{ 2, 1, 3, 4 }'], capture_output=True)
+    self.assertEqual(result1.stdout, result2.stdout)
 
 class TestProblem(unittest.TestCase):
   vertex3Coloring = Problem(
