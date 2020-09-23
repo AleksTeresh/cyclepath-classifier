@@ -1,8 +1,96 @@
 #!/usr/bin/python3
 
-import unittest
+import unittest, subprocess
 from graph import *
 from problem import *
+from classifier import main
+
+class TestE2E(unittest.TestCase):
+  def testFastCycleProblem1(self):
+    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 11, 22, 33}', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(log* n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are finitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testFastCycleProblem2(self):
+    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 00, 1M, M1 }', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(log* n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are finitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testTrivialCycleProblem(self):
+    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{HT, TH}', "-e", "{HT, TH}"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is O(1)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are 0 unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testGlobalCycleProblem(self):
+    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are infinitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testGlobalDirectedCycleProblem(self):
+    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is Θ(n)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are infinitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testTrivialPathProblem(self):
+    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is O(1)")
+    self.assertEqual(lines[1], "There are finitely many solvable instances")
+    self.assertEqual(lines[2], "There are infinitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
+
+  def testAsymmetricDirected(self):
+    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 2)
+    self.assertEqual(lines[0], "A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
+    self.assertEqual(lines[1], "")
+
+  def testGracefulErrorForTree(self):
+    result = subprocess.run(['./classifier.py', '-t', 'tree', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 2)
+    self.assertEqual(lines[0], "Do not specify any constraints other than edge-constr when --type option is 'tree'")
+    self.assertEqual(lines[1], '')
+
+  def testTrivialTree(self):
+    result = subprocess.run(['./classifier.py', '-t', 'tree', '-e', '{ 11, 22 }'], capture_output=True)
+    lines = str(result.stdout.decode('utf-8')).split('\n')
+
+    self.assertEqual(len(lines), 4)
+    self.assertEqual(lines[0], "Round complexity of the problem is O(1)")
+    self.assertEqual(lines[1], "There are infinitely many solvable instances")
+    self.assertEqual(lines[2], "There are finitely many unsolvable instances")
+    self.assertEqual(lines[3], '')
 
 class TestProblem(unittest.TestCase):
   vertex3Coloring = Problem(
