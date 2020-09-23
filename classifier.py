@@ -11,8 +11,8 @@ def classify(problem):
   graph = toGraph(problem)
 
   s = isSymmetric(problem)
-  if not s and problem.type != Type.UNDIRECTED:
-    print("A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
+  if not s and problem.type == Type.UNDIRECTED:
+    print("A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
     return
 
   r = hasRepeatable(graph)
