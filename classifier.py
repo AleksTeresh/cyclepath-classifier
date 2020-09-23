@@ -58,12 +58,12 @@ def classify(problem):
   print('Round complexity of the problem is %s' % complexity)
   print(
     'Deciding the number of solvable instances is NP-complete' if
-    solvableInstanceCount == "HARD" else
+    solvableInstanceCount == HARD else
     'There are %s solvable instances' % solvableInstanceCount
   )
   print(
     'Deciding the number of unsolvable instances is NP-complete' if
-    solvableInstanceCount == "HARD" else
+    unsolvableInstanceCount == HARD else
     'There are %s unsolvable instances' % unsolvableInstanceCount
   )
 
