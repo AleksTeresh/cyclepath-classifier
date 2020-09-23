@@ -12,10 +12,12 @@ The tool is based on the techniques described in [this paper](https://arxiv.org/
 
 Run the tool specifying node and edge constraints of a problem in the node-edge-checkable formalism.
 
-The required parameters are `t` or `--type`, `-n` or `--node-constr` and `-e` or `--edge-constr`.
+The required parameters are `-t` or `--type`, `-n` or `--node-constr` and `-e` or `--edge-constr`.
 There are also optional parameters specifying start and end constraints: `--start-constr` and `--end-constr`
 
-The tool will assume that the problem is defined for a **path** if either `--start-constr` or `--end-constr` is specified. Otherwise, **cycle** setting is assumed.
+`--type` accepts 3 values: `dir`, `undir` and `tree` for directed cyclepath, undirected cyclepath and a rooted tree respectively.
+
+Unless the type is `tree`, the tool will assume that the problem is defined for a **path** if either `--start-constr` or `--end-constr` is specified. Otherwise, **cycle** setting is assumed.
 
 ### Examples
 
