@@ -27,21 +27,21 @@ def classify(problem):
     problemType = "B"
   elif s and r and f and l and not mf and not mfl:
     problemType = "C"
-  elif not s and r and f and l and not mf and not mfl:
+  elif not s and r and f and l:
     problemType = "D"
   elif s and r and f and not l and mf and not mfl:
     problemType = "E"
   elif s and r and f and not l and not mf and not mfl:
     problemType = "F"
-  elif not s and r and f and not l and not mf and not mfl:
+  elif not s and r and f and not l:
     problemType = "G"
   elif s and r and not f and not l and not mf and not mfl:
     problemType = "H"
-  elif not s and r and not f and not l and not mf and not mfl:
+  elif not s and r and not f and not l:
     problemType = "I"
   elif s and not r and not f and not l and not mf and not mfl:
     problemType = "J"
-  elif not s and not r and not f and not l and not mf and not mfl:
+  elif not s and not r and not f and not l:
     problemType = "K"
   else:
     print("No problem type matches the specified problem.")
