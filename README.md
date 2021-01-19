@@ -22,7 +22,7 @@ Unless the type is `tree`, the tool will assume that the problem is defined for 
 ### Examples
 
 ```
-$ ./classifier.py -t undir -n "{ 11, 22, 33 }" -e "{ 12, 21, 13, 31, 23, 32 }"
+$ python3 -m cyclepath_classifier -t undir -n "{ 11, 22, 33 }" -e "{ 12, 21, 13, 31, 23, 32 }"
 
 Round complexity of the problem is Θ(log* n)
 There are infinitely many solvable instances
@@ -30,7 +30,7 @@ There are finitely many unsolvable instances
 ```
 
 ```
-$ ./classifier.py -t undir -n "{ 12, 21 }" -e "{ 11, 22 }"
+$ python3 -m cyclepath_classifier -t undir -n "{ 12, 21 }" -e "{ 11, 22 }"
 
 Round complexity of the problem is Θ(n)
 There are infinitely many solvable instances
@@ -38,7 +38,13 @@ There are infinitely many unsolvable instances
 ```
 
 ```
-$ ./classifier.py -t undir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
+$ python3 -m cyclepath_classifier -t undir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
+
+A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.
+```
+
+```
+$ python3 -m cyclepath_classifier -t dir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
 
 Round complexity of the problem is O(1)
 There are finitely many solvable instances
@@ -46,13 +52,7 @@ There are infinitely many unsolvable instances
 ```
 
 ```
-$ ./classifier.py -t dir -n "{00, 1M}" -e "{01, 10, 11, MM}" --start-constr "{ 1 }" --end-constr "{ 1 }"
-
-A problem has to be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.
-```
-
-```
-$ ./classifier.py -t tree -e "{ 11, 22 }"
+$ python3 -m cyclepath_classifier -t tree -e "{ 11, 22 }"
 
 Round complexity of the problem is O(1)
 There are infinitely many solvable instances
@@ -61,4 +61,4 @@ There are finitely many unsolvable instances
 
 ## Tests
 
-Run tests with `./test.py`. See the file for details.
+Run tests with `python -m unittest discover`. See the `tests/test.py` file for details.
