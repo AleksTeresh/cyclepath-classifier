@@ -1,7 +1,7 @@
 from functools import reduce
 from typing import NamedTuple, Set
-from graph import prune
 from enum import Enum
+from .graph import prune
 
 class Type(Enum):
   DIRECTED = 1

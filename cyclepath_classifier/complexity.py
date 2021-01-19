@@ -1,4 +1,4 @@
-from problem import Type
+from .problem import Type
 
 CONST = "O(1)"
 GLOBAL = "Θ(n)"

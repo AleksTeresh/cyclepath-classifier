@@ -1,13 +1,11 @@
 #!/usr/bin/python3
 
-import unittest, subprocess
-from graph import *
-from problem import *
-from classifier import main
+import unittest, subprocess, sys
+from cyclepath_classifier import *
 
 class TestE2E(unittest.TestCase):
   def testFastCycleProblem1(self):
-    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 11, 22, 33}', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'undir', '-n', '{ 11, 22, 33}', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -17,7 +15,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testFastCycleProblem2(self):
-    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 00, 1M, M1 }', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'undir', '-n', '{ 00, 1M, M1 }', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -27,7 +25,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testTrivialCycleProblem(self):
-    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{HT, TH}', "-e", "{HT, TH}"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', '-n', '{HT, TH}', "-e", "{HT, TH}"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -37,7 +35,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testGlobalCycleProblem(self):
-    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'undir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -47,7 +45,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testGlobalDirectedCycleProblem(self):
-    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -57,7 +55,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testTrivialPathProblem(self):
-    result = subprocess.run(['./classifier.py', '-t', 'undir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'undir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 2)
@@ -65,7 +63,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[1], "")
 
   def testAsymmetricDirected(self):
-    result = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -75,7 +73,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[3], '')
 
   def testGracefulErrorForTree(self):
-    result = subprocess.run(['./classifier.py', '-t', 'tree', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
+    result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', '-n', '{ 12, 21 }', "-e", "{ 11, 22 }"], capture_output=True)
     lines = str(result.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 2)
@@ -83,7 +81,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[1], '')
 
   def testTreeAndDirectedPathEq1(self):
-    result1 = subprocess.run(['./classifier.py', '-t', 'tree', '-e', '{ 11, 22 }'], capture_output=True)
+    result1 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', '-e', '{ 11, 22 }'], capture_output=True)
     lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -92,11 +90,11 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[2], "There are finitely many unsolvable instances")
     self.assertEqual(lines[3], '')
 
-    result2 = subprocess.run(['./classifier.py', '-t', 'dir', '-n', '{11, 22}', '-e', '{ 11, 22 }', '--start-constr', '{ 1, 2 }',  '--end-constr', '{ 1, 2 }'], capture_output=True)
+    result2 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', '-n', '{11, 22}', '-e', '{ 11, 22 }', '--start-constr', '{ 1, 2 }', '--end-constr', '{ 1, 2 }'], capture_output=True)
     self.assertEqual(result1.stdout, result2.stdout)
 
   def testTreeAndDirectedPathEq2(self):
-    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
+    result1 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', "-e", "{ 01, 10, 11, MM }"], capture_output=True)
     lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -105,11 +103,11 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[2], "There are finitely many unsolvable instances")
     self.assertEqual(lines[3], '')
 
-    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 00, 11, MM }", "-e", "{ 01, 10, 11, MM }", '--start-constr', '{ 0, 1, M }',  '--end-constr', '{ 0, 1, M }'], capture_output=True)
+    result2 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', "-n", "{ 00, 11, MM }", "-e", "{ 01, 10, 11, MM }", '--start-constr', '{ 0, 1, M }', '--end-constr', '{ 0, 1, M }'], capture_output=True)
     self.assertEqual(result1.stdout, result2.stdout)
 
   def testTreeAndDirectedPathEq3(self):
-    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
+    result1 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', "-e", "{ 12, 21, 13, 31, 23, 32 }"], capture_output=True)
     lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -118,11 +116,11 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[2], "There are finitely many unsolvable instances")
     self.assertEqual(lines[3], '')
 
-    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 22, 11, 33 }", "-e", "{ 12, 21, 13, 31, 23, 32 }", '--start-constr', '{ 2, 1, 3 }',  '--end-constr', '{ 2, 1, 3 }'], capture_output=True)
+    result2 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', "-n", "{ 22, 11, 33 }", "-e", "{ 12, 21, 13, 31, 23, 32 }", '--start-constr', '{ 2, 1, 3 }', '--end-constr', '{ 2, 1, 3 }'], capture_output=True)
     self.assertEqual(result1.stdout, result2.stdout)
 
   def testTreeAndDirectedPathEq4(self):
-    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 14, 41, 12, 21, 13, 31 }"], capture_output=True)
+    result1 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', "-e", "{ 14, 41, 12, 21, 13, 31 }"], capture_output=True)
     lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -131,11 +129,11 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[2], "Deciding the number of unsolvable instances is NP-complete")
     self.assertEqual(lines[3], '')
 
-    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 22, 11, 33, 44 }", "-e", "{ 14, 41, 12, 21, 13, 31 }", '--start-constr', '{ 2, 1, 3, 4 }',  '--end-constr', '{ 2, 1, 3, 4 }'], capture_output=True)
+    result2 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', "-n", "{ 22, 11, 33, 44 }", "-e", "{ 14, 41, 12, 21, 13, 31 }", '--start-constr', '{ 2, 1, 3, 4 }', '--end-constr', '{ 2, 1, 3, 4 }'], capture_output=True)
     self.assertEqual(result1.stdout, result2.stdout)
 
   def testTreeAndDirectedPathEq5(self):
-    result1 = subprocess.run(['./classifier.py', '-t', 'tree', "-e", "{ 12, 21, 13 }"], capture_output=True)
+    result1 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'tree', "-e", "{ 12, 21, 13 }"], capture_output=True)
     lines = str(result1.stdout.decode('utf-8')).split('\n')
 
     self.assertEqual(len(lines), 4)
@@ -144,7 +142,7 @@ class TestE2E(unittest.TestCase):
     self.assertEqual(lines[2], "Deciding the number of unsolvable instances is NP-complete")
     self.assertEqual(lines[3], '')
 
-    result2 = subprocess.run(['./classifier.py', '-t', 'dir', "-n", "{ 22, 11, 33 }", "-e", "{ 12, 21, 13 }", '--start-constr', '{ 2, 1, 3 }',  '--end-constr', '{ 2, 1, 3 }'], capture_output=True)
+    result2 = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', "-n", "{ 22, 11, 33 }", "-e", "{ 12, 21, 13 }", '--start-constr', '{ 2, 1, 3 }', '--end-constr', '{ 2, 1, 3 }'], capture_output=True)
     self.assertEqual(result1.stdout, result2.stdout)
 
 class TestProblem(unittest.TestCase):
@@ -394,4 +392,4 @@ class TestAutomataProps(unittest.TestCase):
     self.assertFalse(hasMirrorFlexible(self.graphK))
     self.assertFalse(hasMirrorFlexibleLoop(self.graphK))
 
-unittest.main()
+# unittest.main()
