@@ -59,6 +59,13 @@ There are infinitely many solvable instances
 There are finitely many unsolvable instances
 ```
 
+```
+python3 -m cyclepath_classifier -t tree -e "{ 12, 13, 23, 21, 31, 32 }"
+Round complexity of the problem is Θ(log* n)
+There are infinitely many solvable instances
+There are finitely many unsolvable instances
+```
+
 ## Tests
 
 Run tests with `python -m unittest discover`. See the `tests/test.py` file for details.
