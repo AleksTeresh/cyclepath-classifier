@@ -1,5 +1,6 @@
 
 from .classifier import classify
+from .instances import HARD
 from .problem import Problem, Type
 from .util import flatMap
 import sys, getopt
@@ -46,9 +47,9 @@ def main():
 
   nodeConstr = {}
   edgeConstr = {}
-  startConstr={}
-  endConstr={}
-  settingType=""
+  startConstr = {}
+  endConstr = {}
+  settingType = ""
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
@@ -62,10 +63,10 @@ def main():
     elif opt in ("-e", "--edge-constr"):
       edgeConstr = parseConstraints(arg)
     elif opt == "--start-constr":
-      checkFormalismForTrees(settingType)  
+      checkFormalismForTrees(settingType)
       startConstr = parseConstraints(arg)
     elif opt == "--end-constr":
-      checkFormalismForTrees(settingType)  
+      checkFormalismForTrees(settingType)
       endConstr = parseConstraints(arg)
     else:
       print("Unhandled option: " + opt)
@@ -86,11 +87,18 @@ def main():
 
   problem = Problem(nodeConstr, edgeConstr, startConstr, endConstr, settingType)
   
-  try:
-    classify(problem)
-  except:
-    print("Something went wrong...")
-    sys.exit(1)
+  result = classify(problem)
+  print('Round complexity of the problem is %s' % result['complexity'])
+  print(
+    'Deciding the number of solvable instances is NP-complete' if
+    result['solvable'] == HARD else
+    'There are %s solvable instances' % result['solvable']
+  )
+  print(
+    'Deciding the number of unsolvable instances is NP-complete' if
+    result['unsolvable'] == HARD else
+    'There are %s unsolvable instances' % result['unsolvable']
+  )
 
   sys.exit(0)
       

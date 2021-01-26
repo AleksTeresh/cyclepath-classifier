@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from .complexity import complexities
-from .instances import instanceCounts, HARD
+from .instances import instanceCounts
 from .problem import isSymmetric, toGraph, Problem, Type
 from .graph import hasRepeatable, hasFlexible, hasLoop, hasMirrorFlexible, hasMirrorFlexibleLoop
 
@@ -10,8 +10,7 @@ def classify(problem):
 
   s = isSymmetric(problem)
   if not s and problem.type == Type.UNDIRECTED:
-    print("A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
-    return
+    raise Exception("A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
 
   r = hasRepeatable(graph)
   f = hasFlexible(graph)
@@ -42,8 +41,7 @@ def classify(problem):
   elif not s and not r and not f and not l:
     problemType = "K"
   else:
-    print("No problem type matches the specified problem.")
-    raise Exception
+    raise Exception("No problem type matches the specified problem.")
 
   setting = "paths" if problem.startConstr or problem.endConstr else "cycles"
   # complexity on a tree is the same as on a directed path
@@ -53,15 +51,8 @@ def classify(problem):
   solvableInstanceCount = instanceCounts[setting][problemType]["solvable"]
   unsolvableInstanceCount = instanceCounts[setting][problemType]["unsolvable"]
 
-  print('Round complexity of the problem is %s' % complexity)
-  print(
-    'Deciding the number of solvable instances is NP-complete' if
-    solvableInstanceCount == HARD else
-    'There are %s solvable instances' % solvableInstanceCount
-  )
-  print(
-    'Deciding the number of unsolvable instances is NP-complete' if
-    unsolvableInstanceCount == HARD else
-    'There are %s unsolvable instances' % unsolvableInstanceCount
-  )
-
+  return {
+    'complexity': complexity,
+    'solvable': solvableInstanceCount,
+    'unsolvable': unsolvableInstanceCount
+  }
