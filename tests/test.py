@@ -56,11 +56,10 @@ class TestE2E(unittest.TestCase):
 
   def testTrivialPathProblem(self):
     result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'undir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)
-    lines = str(result.stdout.decode('utf-8')).split('\n')
+    lines = str(result.stderr.decode('utf-8')).split('\n')
 
-    self.assertEqual(len(lines), 2)
-    self.assertEqual(lines[0], "A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.")
-    self.assertEqual(lines[1], "")
+    self.assertIn("A problem cannot be of 'undirected' type if its constraints are asymmetric. Otherwise it is not well-defined.", lines[-2])
+    self.assertEqual(lines[-1], "")
 
   def testAsymmetricDirected(self):
     result = subprocess.run([sys.executable, '-m', 'cyclepath_classifier', '-t', 'dir', '-n', '{00, 1M}', "-e", "{01, 10, 11, MM}", '--start-constr', '{ 1 }', '--end-constr', '{ 1 }'], capture_output=True)

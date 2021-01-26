@@ -2,7 +2,6 @@
 from .classifier import classify
 from .instances import HARD
 from .problem import Problem, Type
-from .util import flatMap
 import sys, getopt
 
 def usage():
@@ -79,11 +78,6 @@ def main():
   if settingType == "":
     print("Type option needs to be specified.")
     sys.exit(1)
-  elif settingType == Type.TREE:
-    alphabet = set(flatMap(lambda x: x, edgeConstr))
-    nodeConstr = set(map(lambda x: x + x, alphabet))
-    startConstr = alphabet
-    endConstr = alphabet
 
   problem = Problem(nodeConstr, edgeConstr, startConstr, endConstr, settingType)
   

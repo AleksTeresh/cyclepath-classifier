@@ -3,9 +3,28 @@
 from .complexity import complexities
 from .instances import instanceCounts
 from .problem import isSymmetric, toGraph, Problem, Type
+from .util import flatMap
 from .graph import hasRepeatable, hasFlexible, hasLoop, hasMirrorFlexible, hasMirrorFlexibleLoop
 
+def preprocessProblem(problem):
+  if problem.type == Type.TREE:
+    alphabet = set(flatMap(lambda x: x, problem.edgeConstr))
+    nodeConstr = set(map(lambda x: x + x, alphabet))
+    startConstr = alphabet
+    endConstr = alphabet
+    return Problem(
+      nodeConstr,
+      problem.edgeConstr,
+      startConstr,
+      endConstr,
+      problem.type
+    )
+  else:
+    return problem
+
 def classify(problem):
+  problem = preprocessProblem(problem)
+
   graph = toGraph(problem)
 
   s = isSymmetric(problem)
