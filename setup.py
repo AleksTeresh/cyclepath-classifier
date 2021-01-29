@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="cyclepath-classifier",
-    version="0.2.0",
+    version="0.2.1",
     description="A command-line tool for automatically calculating round complexity of LCL problems in cycles and paths based on their description in the node-edge-checkable formalism",
     long_description=README,
     long_description_content_type="text/markdown",
